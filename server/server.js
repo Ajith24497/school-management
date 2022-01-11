@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const helmet = require("helmet");
 require("dotenv").config();
 
 const root_route = require("./routes/root_route");
@@ -20,6 +21,7 @@ const mark_details_route = require("./routes/mark_details_route");
 const login_route = require("./routes/login_route");
 
 app.use(express.json());
+app.use(helmet());
 
 //Express Routes
 app.use("/", root_route);
