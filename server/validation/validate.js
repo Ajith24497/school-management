@@ -5,8 +5,7 @@ const validate = (req, res, next) => {
   if (errors.isEmpty()) {
     return next();
   }
-
-  return res.status(422).json(errors.array());
+  return res.json({ status: "error", errors: errors.array() });
 };
 
 module.exports = validate;

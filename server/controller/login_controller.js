@@ -21,10 +21,10 @@ const login = async (req, res) => {
         token,
       });
     } else {
-      res.status(500).json("Wrong Password");
+      res.json({ status: "error", errors: "Wrong Password" });
     }
   } catch (err) {
-    res.status(500).json(err);
+    res.json({ status: "error", errors: err });
   }
 };
 
