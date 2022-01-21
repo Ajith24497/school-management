@@ -11,7 +11,6 @@ const login = async (req, res) => {
       const token = jwt.sign(
         {
           id: user.uuid,
-          login_name: user.login_name,
           user_type_id: user.user_type_id,
         },
         process.env.JWT_SECRET
@@ -19,6 +18,8 @@ const login = async (req, res) => {
       res.json({
         status: "OK",
         token,
+        userType: user.user_type_id,
+        userId: user.uuid,
       });
     } else {
       res.json({ status: "error", errors: "Wrong Password" });

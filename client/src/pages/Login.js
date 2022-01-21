@@ -1,8 +1,10 @@
-import { React, useEffect, useReducer } from "react";
+import { React, useReducer, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/login_api";
 import "../css/login-page.css";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
+import { createCookie } from "../api/cookie_api";
+import { AuthContext } from "../contexts/AuthContext";
 
 const initialState = {
   user: "",
@@ -34,11 +36,8 @@ function reducer(state, action) {
 
 function Login() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const { setIsAuth, setUserType, setToken, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    document.cookie = null;
-  });
 
   const handleChange = (e) => {
     dispatch({
@@ -50,6 +49,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const { user, password } = state;
     const loginData = await login(user, password);
     const isCorrectDetails = (boolean) => {
@@ -58,11 +58,14 @@ function Login() {
         payload: boolean,
       });
     };
-
     if (loginData.data.status === "OK") {
+      const { token, userType, userId } = loginData.data;
+      createCookie("token", token, 15 * 60);
+      setIsAuth(true);
+      setToken(token);
+      setUserType(userType);
+      setUser(userId);
       isCorrectDetails(true);
-      const loginToken = loginData.data.token;
-      document.cookie = loginToken;
       navigate("/home");
     } else {
       isCorrectDetails(false);

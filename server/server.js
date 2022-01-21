@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const helmet = require("helmet");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const root_route = require("./routes/root_route");
@@ -21,9 +22,11 @@ const exam_route = require("./routes/exam_route");
 const mark_details_route = require("./routes/mark_details_route");
 const login_route = require("./routes/login_route");
 const super_admin_route = require("./routes/super_admin_route");
+const cookie_route = require("./routes/cookie_route");
 
 app.use(express.json());
 app.use(helmet());
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
 //Express Routes
@@ -44,6 +47,7 @@ app.use("/exam", exam_route);
 app.use("/markdetails", mark_details_route);
 app.use("/login", login_route);
 app.use("/superadmin", super_admin_route);
+app.use("/cookie", cookie_route);
 
 app.listen(process.env.PORT, () => {
   console.log(`Listening to Port:${process.env.PORT}`);
