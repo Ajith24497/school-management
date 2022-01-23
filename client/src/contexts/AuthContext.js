@@ -1,5 +1,6 @@
-import React, { createContext, useReducer, useEffect } from "react";
-import { getCookies } from "../api/cookie_api";
+import React, { createContext, useEffect, useReducer } from "react";
+import { useNavigate } from "react-router-dom";
+import { userTypes } from "../components/UserTypes";
 
 export const AuthContext = createContext();
 
@@ -27,18 +28,11 @@ function reducer(state, action) {
 
 export function AuthProvider(props) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    getCookies().then((res) => {
-      if (!res.data.status === "notok") {
-        const { token, id, user_type_id } = res.data;
-        setIsAuth(true);
-        setToken(token);
-        setUserType(user_type_id);
-        setUser(id);
-      }
-    });
-  }, []);
+    console.log("Auth Context");
+  });
 
   const setIsAuth = (payload) => {
     dispatch({ type: "auth", payload });
@@ -56,9 +50,24 @@ export function AuthProvider(props) {
     dispatch({ type: "user", payload });
   };
 
+  const updateAuthInfo = (auth, token, user, userType, from) => {
+    setIsAuth(auth);
+    setToken(token);
+    setUser(user);
+    setUserType(userType);
+    navigate(`/home/${userTypes[userType]}`);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ state, setIsAuth, setUserType, setToken, setUser }}
+      value={{
+        state,
+        setIsAuth,
+        setUserType,
+        setToken,
+        setUser,
+        updateAuthInfo,
+      }}
     >
       {props.children}
     </AuthContext.Provider>

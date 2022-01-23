@@ -1,13 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
+import "../css/super-admin.css";
 
-function StaffPage() {
+export default function SuperAdmin() {
   return (
-    <div>
-      <h1>StaffPage</h1>
+    <div className="super_admin_main">
       <Outlet />
     </div>
   );
 }
-
-export default StaffPage;

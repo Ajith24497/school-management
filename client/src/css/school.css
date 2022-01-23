@@ -1,0 +1,34 @@
+.school_main {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.school_back_btn {
+  display: flex;
+}
+
+.school_back_btn h6 {
+  display: flex;
+  margin: 0;
+}
+
+.school_back_btn:hover {
+  cursor: pointer;
+}
+
+.school_table {
+  display: flex;
+  margin-top: 20px;
+}
+
+.schools_info {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 40px;
+}
+
+.schools_info h2 {
+  margin: 0;
+}

@@ -1,15 +1,16 @@
 import { React, useReducer, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { login } from "../api/login_api";
+import { createCookie } from "../api/cookie_api";
 import "../css/login-page.css";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
-import { createCookie } from "../api/cookie_api";
 import { AuthContext } from "../contexts/AuthContext";
 
 const initialState = {
   user: "",
   password: "",
   isCorrectDetails: true,
+  auth: false,
 };
 
 function reducer(state, action) {
@@ -36,8 +37,7 @@ function reducer(state, action) {
 
 function Login() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { setIsAuth, setUserType, setToken, setUser } = useContext(AuthContext);
-  const navigate = useNavigate();
+  const { updateAuthInfo } = useContext(AuthContext);
 
   const handleChange = (e) => {
     dispatch({
@@ -47,33 +47,31 @@ function Login() {
     });
   };
 
-  const handleSubmit = async (e) => {
+  const setIsCorrectDetails = (boolean) => {
+    dispatch({
+      type: "isCorrectDetails",
+      payload: boolean,
+    });
+  };
+
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const { user, password } = state;
-    const loginData = await login(user, password);
-    const isCorrectDetails = (boolean) => {
-      dispatch({
-        type: "isCorrectDetails",
-        payload: boolean,
-      });
-    };
-    if (loginData.data.status === "OK") {
-      const { token, userType, userId } = loginData.data;
-      createCookie("token", token, 15 * 60);
-      setIsAuth(true);
-      setToken(token);
-      setUserType(userType);
-      setUser(userId);
-      isCorrectDetails(true);
-      navigate("/home");
-    } else {
-      isCorrectDetails(false);
-    }
+    login(user, password).then((res) => {
+      if (res.data.status === "OK") {
+        const { token, userType, userId } = res.data;
+        setIsCorrectDetails(true);
+        createCookie("token", token, 10 * 60);
+        updateAuthInfo(true, token, userId, userType, "login");
+      } else {
+        setIsCorrectDetails(false);
+      }
+    });
   };
 
   return (
-    <div className="main">
+    <div className="login_main">
       <div className="login_form">
         <div className="login_form_logo">
           <h1>School Management</h1>

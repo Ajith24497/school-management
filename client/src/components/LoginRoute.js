@@ -3,8 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
 
 export default function LoginRoute() {
-  const { state } = useContext(AuthContext);
-  const { isAuth } = state;
+  const {
+    state: { isAuth },
+  } = useContext(AuthContext);
 
   return !isAuth ? <Outlet /> : <Navigate to="/home" />;
 }

@@ -5,13 +5,21 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import { AuthProvider } from "./contexts/AuthContext";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById("root")
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <Router>
+//       <AuthProvider>
+//         <App />
+//       </AuthProvider>
+//     </Router>
+//   </React.StrictMode>,
+//   document.getElementById("root")
+// );
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Router>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </Router>
 );
