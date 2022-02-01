@@ -1,0 +1,26 @@
+.delete_popup {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  background-color: rgb(255, 255, 255);
+  align-items: flex-end;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 5px;
+}
+
+.delete_popup_text {
+  display: flex;
+}
+
+.delete_popup_action_buttons {
+  display: flex;
+  margin-top: 20px;
+}
+
+.delete_popup_action_button_delete {
+  margin-left: 10px;
+}

@@ -1,3 +1,4 @@
+const { getAuthBearerToken } = require("../middleware/auth_bearer_token");
 const { School } = require("../models");
 
 const getSchool = async (req, res) => {
@@ -12,9 +13,10 @@ const getSchool = async (req, res) => {
 
 const getAllSchool = async (req, res) => {
   try {
-    const school = await School.findAll();
-    res.json(school);
+    const school = await School.findAll({ where: { is_deleted: false } });
+    res.status(200).json(school);
   } catch (err) {
+    console.log(err);
     res.status(500).json(err);
   }
 };
@@ -37,11 +39,44 @@ const addSchool = async (req, res) => {
 };
 
 const updateSchool = async (req, res) => {
-  res.send("This update School");
+  try {
+    const { name, branch, syllabus, address, email, tel_no, uuid } = req.body;
+    const school = await School.update(
+      {
+        name,
+        branch,
+        syllabus,
+        address,
+        email,
+        tel_no,
+      },
+      {
+        where: {
+          uuid,
+        },
+      }
+    );
+    res.json(school);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 };
 
 const deleteSchool = async (req, res) => {
-  res.send("This delete School");
+  try {
+    const { uuid } = req.body;
+    const school = await School.update(
+      { is_deleted: true },
+      { where: { uuid } }
+    );
+
+    if (school) {
+      res.status(200).json({ message: "User Deleted Successfully" });
+    }
+    res.status(400).json({ message: "User Not Found" });
+  } catch (error) {
+    res.status(400).json({ message: "error", error });
+  }
 };
 
 module.exports = {

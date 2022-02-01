@@ -1,6 +1,5 @@
 const { Login, User, UserType } = require("../models");
 const { getAuthBearerToken } = require("./auth_bearer_token");
-require("dotenv").config();
 
 const authenticate = async (req, res, next) => {
   try {
@@ -18,8 +17,7 @@ const authenticate = async (req, res, next) => {
     });
     if (!userLoginDetails) res.status(400).json({ message: "Invalid Token" });
     const userTypeId = userLoginDetails.dataValues.user.dataValues.user_type.id;
-    console.log(userTypeId);
-    if (userTypeId == "4" || userTypeId == "3") {
+    if (userTypeId == "4") {
       next();
     } else {
       res.status(400).json({ message: "You are not authorized" });

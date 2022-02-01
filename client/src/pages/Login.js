@@ -1,16 +1,16 @@
 import { React, useReducer, useContext } from "react";
 
 import { login } from "../api/login_api";
-import { createCookie } from "../api/cookie_api";
 import "../css/login-page.css";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 import { AuthContext } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import tryCatch from "../components/TryCatch";
 
 const initialState = {
   user: "",
   password: "",
   isCorrectDetails: true,
-  auth: false,
 };
 
 function reducer(state, action) {
@@ -37,7 +37,8 @@ function reducer(state, action) {
 
 function Login() {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { updateAuthInfo } = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     dispatch({
@@ -54,20 +55,21 @@ function Login() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { user, password } = state;
-    login(user, password).then((res) => {
-      if (res.data.status === "OK") {
-        const { token, userType, userId } = res.data;
-        setIsCorrectDetails(true);
-        createCookie("token", token, 10 * 60);
-        updateAuthInfo(true, token, userId, userType, "login");
-      } else {
-        setIsCorrectDetails(false);
-      }
-    });
+    const [loginData, loginError] = await tryCatch(login(user, password));
+
+    if (loginError) {
+      setIsCorrectDetails(false);
+    } else {
+      const { token } = loginData.data;
+      setIsCorrectDetails(true);
+      setToken(token);
+      localStorage.setItem("token", token);
+      navigate("/home");
+    }
   };
 
   return (

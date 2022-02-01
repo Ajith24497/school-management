@@ -4,8 +4,16 @@ const bcrypt = require("bcryptjs");
 const getSuperAdmin = async (req, res) => {
   try {
     const { uuid } = req.params;
-    const admin = await SuperAdmin.findOne({ where: { uuid } });
-    res.json(admin);
+    const superAdmin = await SuperAdmin.findOne({
+      where: { uuid },
+      include: {
+        model: User,
+        as: "user",
+        attributes: ["user_name", "login_name"],
+      },
+    });
+    if (!superAdmin) res.status(400).json({ message: "user not found" });
+    res.json(superAdmin);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -42,6 +50,21 @@ const addSuperAdmin = async (req, res) => {
 
 const updateSuperAdmin = async (req, res) => {
   try {
+    const { user_name, login_name, uuid } = req.body;
+    const superAdmin = await SuperAdmin.findOne({
+      where: { uuid },
+      include: [{ model: User, as: "user", attributes: ["uuid"] }],
+    });
+
+    const userId = superAdmin.dataValues.user.uuid;
+
+    const updateUser = await User.update(
+      { user_name, login_name },
+      { where: { uuid: userId } }
+    );
+
+    if (!updateUser) res.status(400).json({ message: "Not Updated" });
+    res.status(200).json(updateUser);
   } catch (error) {
     res.status(500).json(error);
   }

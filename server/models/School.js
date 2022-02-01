@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       Designation,
       Staff,
       Subject,
+      Admin,
     }) {
       this.hasMany(Student, { foreignKey: "school_id" });
       this.hasMany(Class, { foreignKey: "school_id" });
@@ -18,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       this.hasMany(Designation, { foreignKey: "school_id" });
       this.hasMany(Staff, { foreignKey: "school_id" });
       this.hasMany(Subject, { foreignKey: "school_id" });
+      this.hasMany(Admin, { foreignKey: "school_id" });
     }
     toJSON() {
       return { ...this.get(), id: undefined };
@@ -72,6 +74,10 @@ module.exports = (sequelize, DataTypes) => {
           notNull: true,
           notEmpty: true,
         },
+      },
+      is_deleted: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
       },
     },
     {

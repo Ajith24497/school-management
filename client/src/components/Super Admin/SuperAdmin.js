@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import "../css/super-admin.css";
+import "../../css/super-admin.css";
 
 export default function SuperAdmin() {
   return (

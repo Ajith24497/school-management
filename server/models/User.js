@@ -2,11 +2,12 @@
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
-    static associate({ UserType, Student, Admin, Staff }) {
+    static associate({ UserType, Student, Admin, Staff, Login }) {
       this.belongsTo(UserType, { foreignKey: "user_type_id", as: "user_type" });
       this.hasOne(Student, { foreignKey: "user_id" });
       this.hasOne(Staff, { foreignKey: "user_id" });
       this.hasOne(Admin, { foreignKey: "user_id" });
+      this.hasOne(Login, { foreignKey: "user_id" });
     }
     toJSON() {
       return {

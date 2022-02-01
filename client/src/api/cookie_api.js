@@ -8,7 +8,7 @@ export const createCookie = async (
 ) => {
   await axios({
     method: "POST",
-    url: "http://localhost:5000/cookie/create",
+    url: "/cookie/create",
     responseType: "json",
     data: {
       cookieName,
@@ -21,7 +21,7 @@ export const createCookie = async (
 export const deleteCookie = async (cookieName) =>
   await axios({
     method: "POST",
-    url: "http://localhost:5000/cookie/delete",
+    url: "/cookie/delete",
     responseType: "json",
     data: {
       cookieName,
@@ -31,6 +31,6 @@ export const deleteCookie = async (cookieName) =>
 export const getCookies = () =>
   axios({
     method: "POST",
-    url: "http://localhost:5000/cookie/get",
+    url: "/cookie/get",
     responseType: "json",
   });
